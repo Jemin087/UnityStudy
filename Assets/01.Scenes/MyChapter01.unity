@@ -243,8 +243,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capsule: {fileID: 663975914}
   capsuleRotationSpeed: 4
-  sphereMagnitudeX: 1
-  sphereMagnitudeY: 1
+  sphereMagnitudeX: 2
+  sphereMagnitudeY: 4
   sphereFrequency: 1
 --- !u!1 &148672559
 GameObject:
