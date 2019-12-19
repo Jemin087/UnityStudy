@@ -7,8 +7,7 @@ using UnityEngine.EventSystems;
 public class MyChapter01 : MonoBehaviour
 {
 
-    /*Chapter01 analyze And modify
-     영어로 주석달아보기
+    /*Chapter01 
      */
     [SerializeField]
     private GameObject capsule;
@@ -66,6 +65,7 @@ public class MyChapter01 : MonoBehaviour
             //         Mathf.Abs(Mathf.Sin((Time.time - buttonDownTime) * (Mathf.PI) * sphereFrequency) * sphereMagnitudeY), 0);
            //  Debug.Log(Time.time-buttonDownTime);
             //Abs 함수가 없으면 공이 -1~1 까지 튄다.
+
 
         }
     }
