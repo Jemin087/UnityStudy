@@ -151,6 +151,8 @@ public class MyChapter03 : MonoBehaviour
                 = sphericalCoordinates.Rotate(h * rotateSpeed * Time.deltaTime, v * rotateSpeed * Time.deltaTime).toCartesian + pivot.position;
         }
         float sw = -Input.GetAxis("Mouse ScrollWheel");
+
+
         if(sw*sw>Mathf.Epsilon)
         {
             transform.position = sphericalCoordinates.TranslateRadius(sw * Time.deltaTime * scrollSpeed).toCartesian + pivot.position;
@@ -170,6 +172,7 @@ public class MyChapter03 : MonoBehaviour
         Vector3 edge2 = cameraPoint - triangleVertices[1];
 
         Vector3 edge3 = triangleVertices[2] - triangleVertices[1];
+
 
         Vector3 edge4 = cameraPoint - triangleVertices[2];
 

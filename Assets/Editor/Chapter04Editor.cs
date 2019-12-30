@@ -2,122 +2,132 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor( typeof(Chapter04) )]
-public class Chapter04Editor : Editor {
+[CustomEditor(typeof(Chapter04))]
+public class Chapter04Editor : Editor
+{
 
-	Matrix4x4 matrix = new Matrix4x4();
+    Matrix4x4 matrix = new Matrix4x4();
 
-	float determinant3x3;
-	float determinant4x4;
-	
-	Vector4 rhs;
-	Vector4 result;
+    float determinant3x3;
+    float determinant4x4;
 
-	public override void OnInspectorGUI() {
-		// base.OnInspectorGUI ();
+    Vector4 rhs;
+    Vector4 result;
 
-		// Hide Script property
-		serializedObject.Update();
-		DrawPropertiesExcluding(serializedObject, new string[]{"m_Script"});
-		serializedObject.ApplyModifiedProperties();
+    public override void OnInspectorGUI()
+    {
+        // base.OnInspectorGUI ();
 
-		//Chapter04 obj = target as Chapter04;
+        //Update : 내부 캐쉬에서 최신 데이터를 얻습니다. 항상 다루기 전에 미리 호출 해둬야함.
+        serializedObject.Update();
+        DrawPropertiesExcluding(serializedObject, new string[] { "m_Script" });
+        serializedObject.ApplyModifiedProperties();
 
-		EditorGUI.BeginChangeCheck();
+        //Chapter04 obj = target as Chapter04;
 
-		EditorGUILayout.BeginVertical( GUI.skin.box );
+        EditorGUI.BeginChangeCheck();
 
-		EditorGUILayout.LabelField(new GUIContent("Matrix4x4"));
+        EditorGUILayout.BeginVertical(GUI.skin.box);
 
-       
-		matrix.SetRow(0, RowVector4Field(matrix.GetRow(0)));
-		matrix.SetRow(1, RowVector4Field(matrix.GetRow(1)));
-		matrix.SetRow(2, RowVector4Field(matrix.GetRow(2)));
-		matrix.SetRow(3, RowVector4Field(matrix.GetRow(3)));
+        EditorGUILayout.LabelField(new GUIContent("Matrix4x4"));
 
-		EditorGUILayout.EndVertical();
+        
+        matrix.SetRow(0, RowVector4Field(matrix.GetRow(0)));
+        matrix.SetRow(1, RowVector4Field(matrix.GetRow(1)));
+        matrix.SetRow(2, RowVector4Field(matrix.GetRow(2)));
+        matrix.SetRow(3, RowVector4Field(matrix.GetRow(3)));
 
-		EditorGUILayout.BeginVertical( GUI.skin.box );
+        EditorGUILayout.EndVertical();
 
-		determinant3x3 = EditorGUILayout.FloatField("Determinant (3x3)", determinant3x3);
-		determinant4x4 = EditorGUILayout.FloatField("Determinant (4x4)", determinant4x4);
+        EditorGUILayout.BeginVertical(GUI.skin.box);
 
-		EditorGUILayout.EndVertical();
+        determinant3x3 = EditorGUILayout.FloatField("Determinant (3x3)", determinant3x3);
+        determinant4x4 = EditorGUILayout.FloatField("Determinant (4x4)", determinant4x4);
 
-		EditorGUILayout.Space();
+        EditorGUILayout.EndVertical();
 
-		EditorGUILayout.BeginVertical( GUI.skin.box );
+        EditorGUILayout.Space();
 
-		rhs = EditorGUILayout.Vector4Field( "RHS", rhs );
+        EditorGUILayout.BeginVertical(GUI.skin.box);
 
-		EditorGUILayout.EndVertical();
+        rhs = EditorGUILayout.Vector4Field("RHS", rhs);
 
-		EditorGUILayout.Space();
-		
-		if ( GUILayout.Button("operator *" ) ) {
-			result = matrix * rhs;
-		}
+        EditorGUILayout.EndVertical();
 
-		if ( GUILayout.Button("MultiplyPoint" ) ) {
-			result = matrix.MultiplyPoint(rhs);
-		}
+        EditorGUILayout.Space();
 
-		if ( GUILayout.Button("MultiplyPoint3x4" ) ) {
-			result = matrix.MultiplyPoint3x4(rhs);
-		}
+        if (GUILayout.Button("operator *"))
+        {
+            result = matrix * rhs;
+        }
 
-		if ( GUILayout.Button("MultiplyVector" ) ) {
-			result = matrix.MultiplyVector(rhs);
-		}
+        if (GUILayout.Button("MultiplyPoint"))
+        {
+            result = matrix.MultiplyPoint(rhs);
+        }
 
-		EditorGUILayout.BeginVertical( GUI.skin.box );
-		EditorGUILayout.Vector4Field( "Result", result );
-		EditorGUILayout.EndVertical();
+        if (GUILayout.Button("MultiplyPoint3x4"))
+        {
+            result = matrix.MultiplyPoint3x4(rhs);
+        }
 
-		if (EditorGUI.EndChangeCheck()) {
-			determinant3x3 = getDeterminant3x3(matrix);
-			determinant4x4 = getDeterminant4x4(matrix);
+        if (GUILayout.Button("MultiplyVector"))
+        {
+            result = matrix.MultiplyVector(rhs);
+        }
 
-			Undo.RecordObject(target, "Chapter04EditorUndo");
-			EditorUtility.SetDirty(target);
-		}
-	}
+        EditorGUILayout.BeginVertical(GUI.skin.box);
+        EditorGUILayout.Vector4Field("Result", result);
+        EditorGUILayout.EndVertical();
 
-	public float getDeterminant3x3(Matrix4x4 m) {
-		return m.m00 * m.m11 * m.m22 - m.m00 * m.m12 * m.m21 - m.m01 * m.m10 * m.m22
-			+ m.m01 * m.m12 * m.m20 + m.m02 * m.m10 * m.m21 - m.m02 * m.m11 * m.m20
-		;
-	}
+        if (EditorGUI.EndChangeCheck())
+        {
+            determinant3x3 = getDeterminant3x3(matrix);
+            determinant4x4 = getDeterminant4x4(matrix);
 
-	public float getDeterminant4x4(Matrix4x4 m) {
-		return m.m03 * m.m12 * m.m21 * m.m30 - m.m02 * m.m13 * m.m21 * m.m30 - m.m03 * m.m11 * m.m22 * m.m30
-			+ m.m01 * m.m13 * m.m22 * m.m30 + m.m02 * m.m11 * m.m23 * m.m30 - m.m01 * m.m12 * m.m23 * m.m30
-			- m.m03 * m.m12 * m.m20 * m.m31 + m.m02 * m.m13 * m.m20 * m.m31 + m.m03 * m.m10 * m.m22 * m.m31
-			- m.m00 * m.m13 * m.m22 * m.m31 - m.m02 * m.m10 * m.m23 * m.m31 + m.m00 * m.m12 * m.m23 * m.m31
-			+ m.m03 * m.m11 * m.m20 * m.m32 - m.m01 * m.m13 * m.m20 * m.m32 - m.m03 * m.m10 * m.m21 * m.m32
-			+ m.m00 * m.m13 * m.m21 * m.m32 + m.m01 * m.m10 * m.m23 * m.m32 - m.m00 * m.m11 * m.m23 * m.m32
-			- m.m02 * m.m11 * m.m20 * m.m33 + m.m01 * m.m12 * m.m20 * m.m33 + m.m02 * m.m10 * m.m21 * m.m33
-			- m.m00 * m.m12 * m.m21 * m.m33 - m.m01 * m.m10 * m.m22 * m.m33 + m.m00 * m.m11 * m.m22 * m.m33
-		;
-	}
+            Undo.RecordObject(target, "Chapter04EditorUndo");
+            EditorUtility.SetDirty(target);
+        }
+    }
 
-	public static Vector4 RowVector4Field(Vector4 value, params GUILayoutOption[] options)
-	{
-		Rect position = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.numberField, options);
-		float[] values = new float[]{value.x, value.y, value.z, value.w};
+    public float getDeterminant3x3(Matrix4x4 m)
+    {
+        return m.m00 * m.m11 * m.m22 - m.m00 * m.m12 * m.m21 - m.m01 * m.m10 * m.m22
+            + m.m01 * m.m12 * m.m20 + m.m02 * m.m10 * m.m21 - m.m02 * m.m11 * m.m20
+        ;
+    }
 
-		EditorGUI.BeginChangeCheck();
+    public float getDeterminant4x4(Matrix4x4 m)
+    {
+        return m.m03 * m.m12 * m.m21 * m.m30 - m.m02 * m.m13 * m.m21 * m.m30 - m.m03 * m.m11 * m.m22 * m.m30
+            + m.m01 * m.m13 * m.m22 * m.m30 + m.m02 * m.m11 * m.m23 * m.m30 - m.m01 * m.m12 * m.m23 * m.m30
+            - m.m03 * m.m12 * m.m20 * m.m31 + m.m02 * m.m13 * m.m20 * m.m31 + m.m03 * m.m10 * m.m22 * m.m31
+            - m.m00 * m.m13 * m.m22 * m.m31 - m.m02 * m.m10 * m.m23 * m.m31 + m.m00 * m.m12 * m.m23 * m.m31
+            + m.m03 * m.m11 * m.m20 * m.m32 - m.m01 * m.m13 * m.m20 * m.m32 - m.m03 * m.m10 * m.m21 * m.m32
+            + m.m00 * m.m13 * m.m21 * m.m32 + m.m01 * m.m10 * m.m23 * m.m32 - m.m00 * m.m11 * m.m23 * m.m32
+            - m.m02 * m.m11 * m.m20 * m.m33 + m.m01 * m.m12 * m.m20 * m.m33 + m.m02 * m.m10 * m.m21 * m.m33
+            - m.m00 * m.m12 * m.m21 * m.m33 - m.m01 * m.m10 * m.m22 * m.m33 + m.m00 * m.m11 * m.m22 * m.m33
+        ;
+    }
 
-		EditorGUI.MultiFloatField(
-			position,
-			new GUIContent[]{new GUIContent(), new GUIContent(), new GUIContent(), new GUIContent()},
-			values
-		);
+    public static Vector4 RowVector4Field(Vector4 value, params GUILayoutOption[] options)
+    {
+        Rect position = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.numberField, options);
+        float[] values = new float[] { value.x, value.y, value.z, value.w };
 
-		if (EditorGUI.EndChangeCheck()) {
-			value.Set(values[0], values[1], values[2], values[3]);
-		}
+        EditorGUI.BeginChangeCheck();
 
-		return value;
-	}
+        EditorGUI.MultiFloatField(
+            position,
+            new GUIContent[] { new GUIContent(), new GUIContent(), new GUIContent(), new GUIContent() },
+            values
+        );
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            value.Set(values[0], values[1], values[2], values[3]);
+        }
+
+        return value;
+    }
 }
