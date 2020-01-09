@@ -18,7 +18,6 @@ public class Chapter04Editor : Editor
     {
         // base.OnInspectorGUI ();
 
-        //Update : 내부 캐쉬에서 최신 데이터를 얻습니다. 항상 다루기 전에 미리 호출 해둬야함.
         serializedObject.Update();
         DrawPropertiesExcluding(serializedObject, new string[] { "m_Script" });
         serializedObject.ApplyModifiedProperties();

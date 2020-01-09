@@ -42,9 +42,68 @@ public class MyChapter04 : Editor
         determinant3x3 = EditorGUILayout.FloatField("Determinant (3x3)", determinant3x3);
         determinant4x4 = EditorGUILayout.FloatField("Determinant (4x4)", determinant4x4);
 
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.BeginVertical(GUI.skin.box);
+
+        rhs = EditorGUILayout.Vector4Field("RHS", rhs);
+
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.Space();
+
+        if(GUILayout.Button("operator *"))
+        {
+            result = matrix * rhs;
+        }
+
+        if(GUILayout.Button("MultiplyPoint"))
+        {
+            result = matrix.MultiplyPoint(rhs);
+        }
+        
+        if(GUILayout.Button("MultiplyPoint3x4"))
+        {
+            result = matrix.MultiplyPoint3x4(rhs);
+        }
+
+        if(GUILayout.Button("MultiplyVector"))
+        {
+            result = matrix.MultiplyPoint(rhs);
+        }
+
+        EditorGUILayout.BeginVertical(GUI.skin.box);
+        EditorGUILayout.Vector4Field("Result", result);
+        EditorGUILayout.EndVertical();
+
+        if(EditorGUI.EndChangeCheck())
+        {
+            determinant3x3 = GetDeterminant3x3(matrix);
+            determinant4x4 = GetDeterminant4x4(matrix);
+            Undo.RecordObject(target, "Chapter04EditorUndo");
+            EditorUtility.SetDirty(target);
+        }
+
+
+        if(GUILayout.Button("테스트트트트"))
+        {
+
+        }
 
     }
 
+
+    public float GetDeterminant3x3(Matrix4x4 m)
+    {
+        return m.m00 * m.m11 * m.m22 - m.m00 * m.m12 * m.m21 - m.m01 * m.m10 * m.m22
+            + m.m01 * m.m12 * m.m20 + m.m02 * m.m10 * m.m21 - m.m02 * m.m11 * m.m20;
+    }
+
+    public float GetDeterminant4x4(Matrix4x4 m)
+    {
+        return m.m00;
+    }
 
 
     public static Vector4 RowVector4Field(Vector4 value,params GUILayoutOption[] options)
