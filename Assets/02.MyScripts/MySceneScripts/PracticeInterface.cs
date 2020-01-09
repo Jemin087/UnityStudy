@@ -29,13 +29,26 @@ interface IIndexer
     
 }
 
+interface ICreateObject
+{
+    void Create();
+}
+
+
 interface IEvent
 {
     event EventHandler OnDie;
+    event EventHandler OnStart;
 }
 
-public class PracticeInterface : A,IMethod,IProperty,IIndexer,IEvent
+
+
+
+public class PracticeInterface : A,IMethod,IProperty,IIndexer,IEvent,ICreateObject
 {
+    [SerializeField]
+    GameObject obj;
+
     private int[] arr = new int[100];
 
     private int salary;
@@ -67,13 +80,18 @@ public class PracticeInterface : A,IMethod,IProperty,IIndexer,IEvent
     }
 
     private void EndGame()
-    {
+    { 
         print("Game End");
     }
 
     private void StartGame()
     {
         print("Game Start");
+    }
+
+    public void Create()
+    {
+        Instantiate();
     }
 
     void Start()
